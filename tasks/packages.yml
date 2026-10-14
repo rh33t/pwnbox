@@ -1,0 +1,43 @@
+---
+- name: Install apt packages
+  ansible.builtin.apt:
+    name: "{{ apt_packages }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+  become: true
+
+- name: install ruby gems for security/ctf
+  gem:
+    name: zsteg
+    state: latest
+    user_install: false
+  become: true
+
+# NetworkManager leaves any interface listed in this file unmanaged
+- name: hand the network interfaces over to NetworkManager
+  copy:
+    dest: /etc/network/interfaces
+    content: |
+      source /etc/network/interfaces.d/*
+
+      auto lo
+      iface lo inet loopback
+    mode: '0644'
+    backup: true
+  become: true
+
+# the installer only adds the console guest tools, which neither resize the screen nor share the clipboard
+- name: install the VirtualBox X11 guest client
+  apt:
+    name: virtualbox-guest-x11
+    state: present
+  become: true
+  when: ansible_facts['virtualization_type'] == 'virtualbox'
+
+- name: install the SPICE guest agent
+  apt:
+    name: spice-vdagent
+    state: present
+  become: true
+  when: ansible_facts['virtualization_type'] == 'kvm'

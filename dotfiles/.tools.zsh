@@ -1,8 +1,5 @@
-# Environment
-export HACKING_LAB="$HOME/work"
+export PWNBOX_WS="$HOME/work"
 
-# keeps the appends below idempotent when a zsh starts from an environment that
-# already has them, such as a nested shell or a tmux server spawning new panes
 typeset -U path PATH
 
 export PATH=$PATH:/sbin
@@ -10,25 +7,22 @@ export PATH=$PATH:$HOME/.local/bin
 export PATH=$PATH:$HOME/.bin
 export PATH=$PATH:$HOME/.cargo/bin
 export PATH=$PATH:$HOME/go/bin
-export PATH=$PATH:$HACKING_LAB/tools/bin
-export PATH=$PATH:$HACKING_LAB/tools/arsenal
+export PATH=$PATH:$PWNBOX_WS/tools/bin
+export PATH=$PATH:$PWNBOX_WS/tools/arsenal
 
 export MANPAGER='nvim +Man!'
 
-# Tool Init
 eval "$(zoxide init zsh)"
 eval "$(fzf --zsh)"
 
-# Navigation
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
-alias cdd='cd $HACKING_LAB; clear;'
+alias cdd='cd $PWNBOX_WS; clear;'
 alias dl='cd ~/Downloads'
 
-# System
 alias l='ls -CF --color=auto'
 alias ll='ls -alh --color=auto'
 alias la='ls -A --color=auto'
@@ -44,23 +38,19 @@ alias psmem='ps auxf | sort -nr -k 4'
 alias psmem10='ps auxf | sort -nr -k 4 | head -10'
 alias stty-size='echo "stty rows $LINES cols $COLUMNS"'
 
-# Clipboard
 alias pbcopy='xsel --input --clipboard'
 alias pbpaste='xsel --output --clipboard'
 
-# Network
-alias ssha='ssh -i $HACKING_LAB/configs/secrets/ssh/pwnie -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+alias ssha='ssh -i $PWNBOX_WS/configs/secrets/ssh/pwnie -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 alias sshu='ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
-alias sshi='ssh -i $HACKING_LAB/configs/secrets/ssh/pwnie'
+alias sshi='ssh -i $PWNBOX_WS/configs/secrets/ssh/pwnie'
 alias ncl='nc -lnvp'
 alias openports='ss -tlnp'
 
-# Docker
-alias dccall='docker stop $(docker ps -aq) > /dev/null && docker rm $(docker ps -aq) > /dev/null'
-alias dccdi='docker rmi $(docker images -f "dangling=true" -q)'
+alias dccdi='docker image prune -f'
 alias dcit='docker run --rm -it -v /tmp:/tmp -v "$PWD":/pwn -w /pwn'
+alias dccall='docker ps -aq | xargs -r docker stop > /dev/null && docker ps -aq | xargs -r docker rm > /dev/null'
 
-# Hacking / CTF
 alias pysrv='python3 -m http.server'
 alias phpd='php -S 0.0.0.0:8000 -ddisplay_errors=1 -dzend_extension=xdebug.so -dxdebug.remote_enable=1'
 alias efs='file=$(fzf --reverse --preview="cat {}" --walker-skip=.git,vendor,node_modules -i) && [ -n "$file" ] && nvim "$file"'
@@ -79,7 +69,7 @@ md5()        { echo -n "$@" | md5sum | cut -d' ' -f1; }
 sha256()     { echo -n "$@" | sha256sum | cut -d' ' -f1; }
 spu() { sshpass -p "$1" ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "${@:2}" }
 
-# Web Recon
+
 alias osint-creds='f(){ xdg-open "https://cirt.net/passwords?criteria=$@"; unset -f f; }; f'
 alias osint-port='f(){ xdg-open "https://www.speedguide.net/port.php?port=$@"; unset -f f; }; f'
 alias osint-certspotter='f(){ curl -sS "https://api.certspotter.com/v1/issuances?domain=$1&include_subdomains=true&expand=dns_names&expand=issuer&expand=cert" | jq; unset -f f; }; f'
@@ -88,7 +78,6 @@ alias osint-crt='f(){ curl -sk "https://crt.sh/json?q=$1" | jq .; unset -f f; };
 alias osint-wayback='f(){ curl -sk "https://web.archive.org/cdx/search/cdx?fl=original&collapse=urlkey&url=*.$1"; unset -f f; }; f'
 alias osint-leakix='f(){ curl -sk "https://leakix.net/api/graph/hostname/$1?v[]=hostname&v[]=ip&d=auto&l=auto" | jq | grep -ioP "hostname/[^\"]+" | cut -d/ -f2 | sort -uV; unset -f f; }; f'
 
-# Functions
 atsu() {
   if (( $# && $+commands[$1] )); then
     local cmd="${commands[$1]}"

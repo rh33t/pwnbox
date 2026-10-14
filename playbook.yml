@@ -2,76 +2,45 @@
 - name: setup hacking environment
   hosts: localhost
   connection: local
+  vars_files:
+    - config.yml
 
-  vars:
-    desktop_sessions: [i3, xfce, mate]
-    desktop_binaries:
-      xfce4-session: xfce
-      mate-session: mate
-
-  # detection runs on every invocation, including tag-filtered ones, because
-  # distro_id and desktop_environment gate tasks in several roles
   pre_tasks:
-  - name: detect distribution
-    set_fact:
-      distro_id: >-
-        {{ 'parrot' if 'Parrot' in ansible_facts['distribution']
-           else 'kali' if 'Kali' in ansible_facts['distribution']
-           else ansible_facts['distribution'] | lower }}
-    tags: always
-
   - name: check the distribution is supported
     assert:
-      that: distro_id in ['kali', 'parrot']
-      fail_msg: >-
-        {{ ansible_facts['distribution'] }} is not supported; this build targets
-        Kali and Parrot. Add vars/{{ distro_id }}.yml to extend it.
+      that: "'Kali' in ansible_facts['distribution']"
+      fail_msg: "{{ ansible_facts['distribution'] }} is not supported; this build targets Kali."
     tags: always
 
-  - name: load distribution variables
-    include_vars: "vars/{{ distro_id }}.yml"
-    tags: always
-
-  - name: look for desktop session binaries
-    stat:
-      path: "/usr/bin/{{ item }}"
-    register: session_binaries
-    loop: "{{ desktop_binaries.keys() | list }}"
-    tags: always
-
-  - name: detect the desktop environment from the running session
-    set_fact:
-      # XDG_CURRENT_DESKTOP is uppercase on parrot ("MATE") and may carry a
-      # prefix elsewhere ("ubuntu:GNOME"), so match case-folded substrings
-      desktop_environment: "{{ desktop_sessions | select('in', xdg_desktop) | first | default('') }}"
-    vars:
-      xdg_desktop: "{{ ansible_facts['env']['XDG_CURRENT_DESKTOP'] | default('') | lower }}"
-    when: not desktop_environment
-    tags: always
-
-  - name: fall back to an installed session binary
-    set_fact:
-      # a Kali box ships xfce4-session even when the user is logged into MATE
-      desktop_environment: >-
-        {{ session_binaries.results | selectattr('stat.exists') | map(attribute='item')
-           | map('extract', desktop_binaries) | first | default('unknown') }}
-    when: not desktop_environment
-    tags: always
-
-  - name: report detection results
-    debug:
-      msg:
-      - "distribution: {{ ansible_facts['distribution'] }} -> distro_id={{ distro_id }}"
-      - "desktop: {{ desktop_environment }}"
-      - "alacritty theme: {{ alacritty_theme }}, docker suite: {{ docker_distribution }}"
-    tags: always
-
-  roles:
-  - system
-  - tools
-  - firefox-burpsuite
-  - terminal
-  - fonts
-  - desktop
-  - applications
-  - dotfiles
+  tasks:
+  - import_tasks: tasks/system.yml
+    tags: system
+  - import_tasks: tasks/packages.yml
+    tags: [tools, packages]
+  - import_tasks: tasks/docker.yml
+    tags: [tools, docker]
+  - import_tasks: tasks/go.yml
+    tags: [tools, golang]
+  - import_tasks: tasks/uv.yml
+    tags: [tools, uv]
+  - import_tasks: tasks/nvim.yml
+    tags: [tools, nvim]
+  - import_tasks: tasks/binaryninja.yml
+    tags: [tools, binaryninja]
+  - import_tasks: tasks/shelf.yml
+    tags: [tools, shelf]
+  - import_tasks: tasks/vscode.yml
+    tags: [tools, vscode]
+  - import_tasks: tasks/wireshark.yml
+    tags: [tools, wireshark]
+  - import_tasks: tasks/burp-firefox.yml
+    tags: [burp, firefox]
+  - import_tasks: tasks/fonts.yml
+    tags: fonts
+  - import_tasks: tasks/dotfiles.yml
+    tags: dotfiles
+  - name: drop the downloaded package archives
+    apt:
+      clean: true
+    become: true
+    tags: [tools, packages]

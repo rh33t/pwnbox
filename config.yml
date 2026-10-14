@@ -1,0 +1,307 @@
+---
+baremetal: false
+
+system_timezone: "Africa/Porto-Novo"
+
+# kali rolling has no docker repo of its own, so track a debian stable suite
+docker_distribution: "trixie"
+
+uv_releases_url: "https://api.github.com/repos/astral-sh/uv/releases/latest"
+uv_download_url: "https://github.com/astral-sh/uv/releases/download"
+
+go_releases_url: "https://go.dev/dl/?mode=json"
+
+nvim_repo_url: "https://github.com/neovim/neovim.git"
+nvim_build_dir: "/tmp/neovim"
+nvim_build_type: "RelWithDebInfo"
+
+fonts:
+  - name: "JetBrainsMono"
+    url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip"
+    dir: "/usr/share/fonts/truetype/jetbrains-mono-nerd"
+  - name: "Roboto"
+    url: "https://github.com/googlefonts/roboto/releases/download/v2.138/roboto-android.zip"
+    dir: "/usr/share/fonts/truetype/roboto"
+temp_base_dir: "/tmp/font-downloads"
+
+apt_packages:
+  # top 10
+  - wireshark
+  - aircrack-ng
+  - burpsuite
+  - hydra
+  - john
+  - metasploit-framework
+  - netexec
+  - nmap
+  - responder
+  - sqlmap
+  # information gathering
+  - arping
+  - dnsenum
+  - dnsrecon
+  - enum4linux
+  - fping
+  - hping3
+  - masscan
+  - nbtscan
+  - netdiscover
+  - qsslcaudit
+  - recon-ng
+  - smbmap
+  - snmpcheck
+  - ssldump
+  - sslh
+  - sslscan
+  - sslyze
+  - thc-ipv6
+  - theharvester
+  - wafw00f
+  - zenmap
+  # vulnerability analysis
+  - peass
+  - spike
+  - voiphopper
+  # web
+  - apache2
+  - cadaver
+  - commix
+  - dirb
+  - dirbuster
+  - hydra-gtk
+  - laudanum
+  - mitmproxy
+  - ncrack
+  - patator
+  - php
+  - php-mysql
+  - proxychains4
+  - proxytunnel
+  - redsocks
+  - skipfish
+  - sqlitebrowser
+  - sslsplit
+  - stunnel4
+  - webshells
+  - weevely
+  - wfuzz
+  - whatweb
+  - wpscan
+  # passwords
+  - cewl
+  - chntpw
+  - creddump7
+  - crunch
+  - gpp-decrypt
+  - hash-identifier
+  - hashcat
+  - hashcat-utils
+  - hashid
+  - maskprocessor
+  - mimikatz
+  - ophcrack
+  - ophcrack-cli
+  - passing-the-hash
+  - pipal
+  - rsmangler
+  - samdump2
+  - statsprocessor
+  - thc-pptp-bruter
+  - wordlists
+  # reverse engineering
+  - clang
+  - radare2
+  # exploitation
+  - exploitdb
+  - msfpc
+  - set
+  # sniffing and spoofing
+  - dnschef
+  - macchanger
+  - netsniff-ng
+  - rebind
+  - tcpreplay
+  # post exploitation
+  - dbd
+  - dns2tcp
+  - exe2hexbat
+  - iodine
+  - miredo
+  - powersploit
+  - ptunnel
+  - pwnat
+  - sbd
+  - udptunnel
+  # forensics
+  - 7zip
+  - autopsy
+  - binwalk
+  - binwalk3
+  - bulk-extractor
+  - exiv2
+  - guymager
+  - hashdeep
+  - inetsim
+  - magicrescue
+  - nasm
+  - pdf-parser
+  - pdfid
+  - scalpel
+  - scrounge-ntfs
+  - sleuthkit
+  - tcpick
+  - unrar
+  - upx-ucl
+  - wce
+  # windows resources
+  - windows-binaries
+  # hardware
+  - minicom
+  # bluetooth
+  - bluez
+  - spooftooph
+  # 802.11
+  - bully
+  - fern-wifi-cracker
+  - iw
+  - kismet
+  - pixiewps
+  - reaver
+  - wifite
+  # services and utilities
+  - amass
+  - arp-scan
+  - atftpd
+  - axel
+  - bind9-dnsutils
+  - certipy-ad
+  - cifs-utils
+  - cryptcat
+  - cryptsetup
+  - cryptsetup-initramfs
+  - cryptsetup-nuke-password
+  - dos2unix
+  - ethtool
+  - evil-winrm
+  - expect
+  - ffuf
+  - gdisk
+  - gobuster
+  - gophish
+  - gss-ntlmssp
+  - hotpatch
+  - i2c-tools
+  - ifenslave
+  - impacket-scripts
+  - libimage-exiftool-perl
+  - multimac
+  - ncurses-hexedit
+  - netbase
+  - netsed
+  - ngrep
+  - offsec-awae-python2
+  - openvpn
+  - pipx
+  - plocate
+  - powershell
+  - powershell-empire
+  - python2
+  - python3-impacket
+  - python3-pip
+  - python3-requests
+  - python3-scapy
+  - python3-virtualenv
+  - rake
+  - samba
+  - samba-common-bin
+  - screen
+  - sendemail
+  - snmp
+  - snmpd
+  - socat
+  - spiderfoot
+  - starkiller
+  - telnet
+  - testdisk
+  - tftp-hpa
+  - traceroute
+  - vboot-kernel-utils
+  - vboot-utils
+  - vlan
+  - vpnc
+  - whois
+  - xxd
+  # gui applications
+  - gparted
+  - rdesktop
+  - recordmydesktop
+  - tightvncserver
+  - xtightvncviewer
+  # system
+  - command-not-found
+  - git
+  - kali-tweaks
+  - vim
+  # desktop base
+  - dbus-user-session
+  - dbus-x11
+  - firefox-esr
+  - haveged
+  - kali-archive-keyring
+  - kali-defaults-desktop
+  - kali-grant-root
+  - kali-menu
+  - kali-themes
+  - orca
+  - xclip
+  - xdg-user-dirs
+  - xdg-utils
+  - xserver-xorg-legacy
+  # added on top of kali
+  - alacritty
+  - autorecon
+  - bettercap
+  - build-essential
+  - clangd
+  - copyq
+  - exiftool
+  - fzf
+  - ghidra
+  - gitk
+  - hexedit
+  - htop
+  - jadx
+  - jq
+  - libpcap-dev
+  - ltrace
+  - moreutils
+  - nodejs
+  - npm
+  - payloadsallthethings
+  - python3-pwntools
+  - ranger
+  - ripgrep
+  - rlwrap
+  - rofi
+  - rustscan
+  - seclists
+  - stow
+  - xsel
+  - zoxide
+  # i3 session
+  - dunst
+  - i3
+  - i3lock
+  - lightdm
+  - lxpolkit
+  - maim
+  - network-manager
+  - network-manager-applet
+  - pipewire-pulse
+  - polybar
+  - thunar
+  - wireplumber
+  - x11-utils
+  - x11-xserver-utils
+  - xorg
+  - xwallpaper

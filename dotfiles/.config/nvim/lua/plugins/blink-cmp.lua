@@ -1,5 +1,5 @@
 return {
-	-- No LuaSnip: uses blink.cmp's built-in snippet engine instead (avoids the jsregexp native build)
+	-- no LuaSnip: the built-in snippet engine avoids the jsregexp native build
 	"saghen/blink.cmp",
 	event = "VimEnter",
 	version = "1.*",

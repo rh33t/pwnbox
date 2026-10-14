@@ -3,7 +3,7 @@ vim.o.relativenumber = true
 vim.o.mouse = "a"
 vim.o.showmode = false
 
--- Scheduled after UiEnter: setting clipboard synchronously here slows startup
+-- scheduled after UiEnter: setting the clipboard synchronously slows startup
 vim.schedule(function()
   vim.o.clipboard = ""
 end)

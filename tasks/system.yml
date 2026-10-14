@@ -1,0 +1,77 @@
+---
+- name: get current user name
+  set_fact:
+    current_user: "{{ ansible_facts['user_id'] }}"
+
+- name: Add current user to sudoers with NOPASSWD
+  copy:
+    content: "{{ current_user }} ALL=(ALL) NOPASSWD:ALL"
+    dest: "/etc/sudoers.d/{{ current_user }}"
+    mode: "0440"
+    owner: root
+    group: root
+    validate: "visudo -cf %s"
+  become: true
+
+- name: set system keyboard layout to French
+  lineinfile:
+    path: /etc/default/keyboard
+    regexp: '^XKBLAYOUT='
+    line: 'XKBLAYOUT="fr"'
+    create: true
+  become: true
+
+- name: set system keyboard model
+  lineinfile:
+    path: /etc/default/keyboard
+    regexp: '^XKBMODEL='
+    line: 'XKBMODEL="pc105"'
+    create: true
+  become: true
+
+- name: swap escape and capslock keys
+  lineinfile:
+    path: /etc/default/keyboard
+    regexp: '^XKBOPTIONS='
+    line: 'XKBOPTIONS="caps:swapescape"'
+    create: true
+  become: true
+  when: baremetal
+
+- name: apply system keyboard configuration
+  shell: |
+    export DEBIAN_FRONTEND=noninteractive
+    dpkg-reconfigure -f noninteractive keyboard-configuration 2>/dev/null || true
+    udevadm trigger --subsystem-match=input --action=change || true
+  become: true
+  changed_when: false
+  timeout: 30
+
+- name: set system timezone to {{ system_timezone }}
+  timezone:
+    name: "{{ system_timezone }}"
+  become: true
+
+- name: verify timezone configuration
+  command: timedatectl show --property=Timezone --value
+  register: current_timezone
+  changed_when: false
+
+- name: display current timezone
+  debug:
+    msg: "System timezone is set to: {{ current_timezone.stdout }}"
+
+- name: Install custom scripts
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    mode: '0755'
+  loop:
+    - pyserver
+  become: true
+
+- name: set zsh as default shell for current user
+  become: true
+  user:
+    name: "{{ ansible_facts['user_id'] }}"
+    shell: /bin/zsh

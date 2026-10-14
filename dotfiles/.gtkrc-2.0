@@ -1,0 +1,7 @@
+gtk-theme-name="Kali-Dark"
+gtk-icon-theme-name="Flat-Remix-Pink-Dark"
+gtk-font-name="Roboto 12"
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle="hintslight"
+gtk-xft-rgba="rgb"

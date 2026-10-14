@@ -1,0 +1,11 @@
+{
+    "editor.fontFamily": "'JetBrainsMono Nerd Font Mono', monospace",
+    "editor.fontLigatures": true,
+    "workbench.colorTheme": "Default Dark+",
+    "editor.lineHeight": 1.4,
+    "editor.fontSize": 14,
+    "editor.cursorStyle": "line-thin",
+    "editor.bracketPairColorization.enabled": true,
+    "chat.disableAIFeatures": true,
+    "chat.agent.enabled": false
+}

@@ -1,6 +1,6 @@
 return {
 	"rose-pine/neovim",
-	priority = 1000, -- Load before other start plugins
+	priority = 1000, -- loads before the other start plugins
 	name = "rose-pine",
 	config = function()
 		require("rose-pine").setup({

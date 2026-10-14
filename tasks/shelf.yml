@@ -1,0 +1,40 @@
+---
+- name: check if shelf is installed
+  command: shelf --version
+  register: shelf_check
+  failed_when: false
+  changed_when: false
+  # the version compare below needs this result even in a dry run
+  check_mode: false
+
+- name: get latest shelf release from github
+  uri:
+    url: https://api.github.com/repos/rh33t/shelf/releases/latest
+    return_content: true
+  register: shelf_release
+  check_mode: false
+  # an unreachable or rate-limited github must not abort the play; an installed shelf is left alone
+  failed_when: false
+
+- name: set shelf release facts
+  set_fact:
+    shelf_latest_version: "{{ shelf_release.json.tag_name }}"
+    shelf_asset: "{{ shelf_release.json.assets | selectattr('name', 'equalto', 'shelf') | first }}"
+  when: shelf_release.status | default(0) == 200
+
+- name: warn when the latest shelf version could not be determined
+  debug:
+    msg: "could not reach the github api, leaving shelf untouched"
+  when: shelf_latest_version is not defined
+
+- name: install shelf
+  when: shelf_latest_version is defined and (shelf_check.rc != 0 or shelf_latest_version not in shelf_check.stdout)
+  block:
+    # github publishes the asset digest as sha256:<hex>, the format get_url expects
+    - name: download shelf binary
+      get_url:
+        url: "{{ shelf_asset.browser_download_url }}"
+        dest: /usr/local/bin/shelf
+        checksum: "{{ shelf_asset.digest }}"
+        mode: '0755'
+      become: true

@@ -116,11 +116,13 @@ for_window [class="copyq"] move position center
 
 # Autostart
 exec_always --no-startup-id xrdb -load ~/.Xresources
-exec_always --no-startup-id xsetroot -solid "$bg"
+# daemon mode redraws the wallpaper when the screen is resized
+exec --no-startup-id xwallpaper --daemon --zoom ~/.local/share/backgrounds/kali-metal-dark.png
 exec_always --no-startup-id ~/.config/polybar/launch.sh
 # i3 ignores autostart .desktop files
 exec --no-startup-id copyq --start-server
-# spawns vmtoolsd -n vmusr, without which the guest never follows a host window resize
-exec --no-startup-id vmware-user-suid-wrapper
-exec --no-startup-id ~/.bin/vmware-autofit.sh
+exec --no-startup-id ~/.bin/screen-autofit.sh
+# session half of the SPICE agent, absent outside QEMU
+exec --no-startup-id spice-vdagent
 exec --no-startup-id nm-applet
+exec --no-startup-id lxpolkit

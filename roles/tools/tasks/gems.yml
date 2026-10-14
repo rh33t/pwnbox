@@ -1,9 +1,0 @@
----
-- name: install ruby gems for security/ctf
-  gem:
-    name: "{{ item }}"
-    state: latest
-    user_install: false
-  loop:
-    - zsteg
-  become: true

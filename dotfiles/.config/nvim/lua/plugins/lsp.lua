@@ -9,8 +9,7 @@ return {
     },
   },
   {
-    -- No mason: install servers yourself (clangd, gopls, pyright, lua-language-server)
-    -- and make sure they're on PATH.
+    -- no mason: clangd, gopls, pyright and lua-language-server must be on PATH
     "neovim/nvim-lspconfig",
     dependencies = {
       { "j-hui/fidget.nvim", opts = {} },
@@ -95,8 +94,7 @@ return {
         },
       })
 
-      -- nvim-lspconfig ships default configs under its lsp/ dir; vim.lsp.config('*', ...)
-      -- merges into every server, vim.lsp.enable() turns them on per-filetype.
+      -- vim.lsp.config('*') merges into the default config of every server
       vim.lsp.config("*", {
         capabilities = require("blink.cmp").get_lsp_capabilities(),
       })

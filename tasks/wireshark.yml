@@ -1,0 +1,21 @@
+---
+- name: ensure wireshark config directory exists
+  file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.config/wireshark"
+    state: directory
+    mode: '0755'
+
+# kali installs dumpcap with capture capabilities, runnable only by this group
+- name: add user to wireshark group
+  user:
+    name: "{{ ansible_facts['user_id'] }}"
+    groups: wireshark
+    append: true
+  become: true
+
+- name: set wireshark font in global preferences
+  lineinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.config/wireshark/preferences"
+    regexp: '^gui\.qt\.font_name:'
+    line: 'gui.qt.font_name: JetBrainsMonoNL Nerd Font Propo,12,-1,5,50,0,0,0,0,0'
+    create: true

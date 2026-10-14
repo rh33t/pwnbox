@@ -1,5 +1,5 @@
 return {
-	-- No mason: install formatters yourself (e.g. stylua) and make sure they're on PATH.
+	-- no mason: formatters such as stylua must be on PATH
 	"stevearc/conform.nvim",
 	event = { "BufWritePre" },
 	cmd = { "ConformInfo" },

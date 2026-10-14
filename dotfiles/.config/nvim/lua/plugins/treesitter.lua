@@ -16,8 +16,7 @@ return {
 			"vim",
 			"vimdoc",
 		},
-		-- Off: compiling parsers on the fly for every new filetype is slow on a VM.
-		-- Run `:TSInstall <lang>` manually when you need one.
+		-- compiling parsers on the fly is slow on a VM, run :TSInstall <lang> when needed
 		auto_install = false,
 		highlight = {
 			enable = true,
