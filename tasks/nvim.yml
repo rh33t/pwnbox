@@ -101,3 +101,13 @@
     path: "{{ nvim_build_dir }}"
     state: absent
   when: nvim_needs_update
+
+- name: Set Neovim as default editor
+  lineinfile:
+    path: /etc/environment
+    regexp: '^{{ item }}='
+    line: '{{ item }}=nvim'
+  loop:
+    - EDITOR
+    - VISUAL
+  become: true
